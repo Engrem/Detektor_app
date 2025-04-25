@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Metalldetektor Funde</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #f9f9f9;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Fund erfassen</h2>
+
+  <input id="leitwert" type="number" placeholder="Leitwert">
+  <input id="tiefe" type="number" placeholder="Tiefe in cm">
+  <input id="fund" type="text" placeholder="Fundart / Beschreibung">
+
+  <button onclick="speichereFund()">Fund speichern</button>
+  <button onclick="exportiereCSV()">CSV exportieren</button>
+
+  <script>
+    // Array für gespeicherte Funde
+    let funde = [];
+
+    function speichereFund() {
+      const leitwert = document.getElementById('leitwert').value;
+      const tiefe = document.getElementById('tiefe').value;
+      const fund = document.getElementById('fund').value;
+      const datum = new Date().toISOString().split('T')[0];
+
+      if (!leitwert || !tiefe || !fund) {
+        alert("Bitte alle Felder ausfüllen!");
+        return;
+      }
+
+      funde.push({ leitwert, tiefe, fund, datum });
+      alert("Fund gespeichert!");
+
+      // Felder leeren
+      document.getElementById('leitwert').value = '';
+      document.getElementById('tiefe').value = '';
+      document.getElementById('fund').value = '';
+    }
+
+    function exportiereCSV() {
+      if (funde.length === 0) {
+        alert("Keine Daten vorhanden.");
+        return;
+      }
+
+      let csv = "leitwert,tiefe,fund,datum\n";
+      funde.forEach(eintrag => {
+        csv += `${eintrag.leitwert},${eintrag.tiefe},${eintrag.fund},${eintrag.datum}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "metalldetektor_funde.csv";
+      a.click();
+
+      URL.revokeObjectURL(url);
+    }
+  </script>
+
+</body>
+</html>
