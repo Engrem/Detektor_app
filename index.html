@@ -28,6 +28,7 @@
   <input id="stabil" type="text" placeholder="Signal stabil?">
   <input id="tiefe" type="number" placeholder="Tiefe in cm">
   <input id="fund" type="text" placeholder="Fundart / Beschreibung">
+  <input id="gps" type="text" placeholder="GPS wenn zur hand">
 
   <button onclick="speichereFund()">Fund speichern</button>
   <button onclick="exportiereCSV()">CSV exportieren</button>
@@ -38,17 +39,18 @@
 
     function speichereFund() {
       const leitwert = document.getElementById('leitwert').value;
+      const stabil = document.getElementById('stabil').value;
       const tiefe = document.getElementById('tiefe').value;
       const fund = document.getElementById('fund').value;
-      const stabil = document.getElementById('stabil').value;
-      const datum = new Date().toISOString().split('T')[0];
+      const gps = document.getElementById('gps').value;
+            const datum = new Date().toISOString().split('T')[0];
 
       if (!leitwert || !stabil || !tiefe || !fund) {
         alert("Bitte alle Felder ausfüllen!");
         return;
       }
 
-      funde.push({ leitwert, stabil, tiefe, fund, datum });
+      funde.push({ leitwert, stabil, tiefe, fund, gps, datum });
       alert("Fund gespeichert!");
 
       // Felder leeren
@@ -56,6 +58,7 @@
       document.getElementById('stabil').value = '';
       document.getElementById('tiefe').value = '';
       document.getElementById('fund').value = '';
+      document.getElementById('gps').value = '';
     }
 
     function exportiereCSV() {
@@ -64,9 +67,9 @@
         return;
       }
 
-      let csv = "leitwert,stabil,tiefe,fund,datum\n";
+      let csv = "leitwert,stabil,tiefe,fund,gps,datum\n";
       funde.forEach(eintrag => {
-        csv += `${eintrag.leitwert},${eintrag.stabil},${eintrag.tiefe},${eintrag.fund},${eintrag.datum}\n`;
+        csv += `${eintrag.leitwert},${eintrag.stabil},${eintrag.tiefe},${eintrag.fund},${eintrag.gps},${eintrag.datum}\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv' });
